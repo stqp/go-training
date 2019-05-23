@@ -1,7 +1,7 @@
-# Go training by Shibata-san.
+# Go training
 
 ## Abstract
 
-Teacher : Yoshiki Shibata San
+Teacher : Yoshiki Shibata San    
 Text : プログラミング言語Go
 
