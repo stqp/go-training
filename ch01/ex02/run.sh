@@ -1,2 +1,2 @@
 #! /bin/sh
-go run ex02/main.go a b c
+go run main.go a b c

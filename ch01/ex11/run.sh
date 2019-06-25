@@ -57,4 +57,4 @@ for url in ${urls[@]};
 do
     urlsString="${urlsString} ${url}"
 done
-go run ex11/main.go ${urlsString}
+go run main.go ${urlsString}

@@ -1,2 +1,2 @@
 #! /bin/sh
-go run ex04/main.go ex04/input ex04/input2
+go run main.go input input2

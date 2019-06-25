@@ -1,34 +1,49 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"os"
 	"strconv"
 
-	tempconv "github.com/stqp/go-training/ch02/ex01"
+	lc "github.com/stqp/go-training/ch02/ex02/lengthconv"
+	tc "github.com/stqp/go-training/ch02/ex02/tempconv"
+	wc "github.com/stqp/go-training/ch02/ex02/weightconv"
 )
 
-func usage() {
-	fmt.Println("please specify 2 arguments")
-	fmt.Println("for example:")
-	fmt.Println(" $ go run main.go [temp | length | weight] <data>")
+func usageAndExit(exitCode int) {
+	fmt.Println("Please specify a number.")
+	os.Exit(exitCode)
 }
 
 func main() {
-	if len(os.Args) == 2 {
-		usage()
-		os.Exit(1)
+
+	if len(os.Args) > 2 {
+		usageAndExit(1)
 	}
 
-	for _, arg := range os.Args[1:] {
-		t, err := strconv.ParseFloat(arg, 64)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "cf: %v\n", err)
-			os.Exit(1)
-		}
-		f := tempconv.Fahrenheit(t)
-		c := tempconv.Celsius(t)
-		fmt.Printf("%s = %s, %s = %s\n",
-			f, tempconv.FToC(f), c, tempconv.CToF(c))
+	var input string
+	if len(os.Args) == 2 {
+		input = os.Args[1]
+	} else {
+		stdin := bufio.NewScanner(os.Stdin)
+		stdin.Scan()
+		input = stdin.Text()
 	}
+
+	num, err := strconv.ParseFloat(input, 64)
+	if err != nil {
+		fmt.Println(err)
+		usageAndExit(1)
+	}
+
+	fmt.Printf("\nLength:\n")
+	fmt.Printf(" %s = %s , %s = %s\n\n", lc.Feet(num), lc.FToM(lc.Feet(num)), lc.Meter(num), lc.MToF(lc.Meter(num)))
+
+	fmt.Printf("Temperature:\n")
+	fmt.Printf(" %s = %s , %s = %s\n\n", tc.Celsius(num), tc.CToF(tc.Celsius(num)), tc.Fahrenheit(num), tc.FToC(tc.Fahrenheit(num)))
+
+	fmt.Printf("Weight:\n")
+	fmt.Printf(" %s = %s , %s = %s\n\n", wc.Pound(num), wc.PToK(wc.Pound(num)), wc.Kilogramme(num), wc.KToP(wc.Kilogramme(num)))
+
 }

@@ -1,2 +1,2 @@
 #! /bin/sh
-go run ex06/main.go > ex06/result.gif
+go run main.go > result.gif
