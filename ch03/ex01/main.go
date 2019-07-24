@@ -41,6 +41,9 @@ func isFinite(xs []float64) bool {
 		if math.Abs(x) == math.Inf(0) {
 			return false
 		}
+		if math.IsNaN(x) {
+			return false
+		}
 	}
 	return true
 }
