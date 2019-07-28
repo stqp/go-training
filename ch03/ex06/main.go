@@ -23,7 +23,17 @@ func main() {
 			img.Set(px, py, mandelbrot(z))
 		}
 	}
-	png.Encode(os.Stdout, img)
+	supersampled := image.NewRGBA(image.Rect(0, 0, width*2, height*2))
+	for py := 0; py < height; py++ {
+		for px := 0; px < width; px++ {
+			c := img.At(px, py)
+			supersampled.Set(px*2, py*2, c)
+			supersampled.Set(px*2+1, py*2, c)
+			supersampled.Set(px*2, py*2+1, c)
+			supersampled.Set(px*2+1, py*2+1, c)
+		}
+	}
+	png.Encode(os.Stdout, supersampled)
 }
 
 func mandelbrot(z complex128) color.Color {

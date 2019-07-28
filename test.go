@@ -2,12 +2,11 @@ package main
 
 import (
 	"fmt"
-	"math"
 )
 
 func main() {
-	//var z float64
-	//var a float64 = 1 / z
-	fmt.Println(math.Pow(2, 3))
 
+	a := "abcde"
+	//b := strings.Index(a, "c")
+	fmt.Println(a[:1], " ", a[1:])
 }
