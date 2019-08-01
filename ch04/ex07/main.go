@@ -16,8 +16,7 @@ func encodeRunes(runes []rune) []byte {
 	bytes := make([]byte, 300)
 	i := 0
 	for _, r := range runes {
-		t := utf8.EncodeRune(bytes[i:], r)
-		i += t
+		i += utf8.EncodeRune(bytes[i:], r)
 	}
 	return bytes[:i]
 }
