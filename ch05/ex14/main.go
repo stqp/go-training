@@ -17,7 +17,7 @@ func breadthFirst(f func(item string) []string, worklist []string) {
 		}
 	}
 }
-aaaaa
+aaa
 func topoSort(m map[string][]string) []string {
 	var order []string
 
