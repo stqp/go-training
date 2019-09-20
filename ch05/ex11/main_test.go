@@ -43,9 +43,29 @@ var prereqs2 = map[string][]string{
 	"programming languages": {"data structures", "computer organization"},
 }
 
+var prereqs3 = map[string][]string{
+	"algorithms":           {"data structures"},
+	"calculus":             {"linear algebra"},
+	"intro to programming": {"programming languages"},
+
+	"compilers": {
+		"data structures",
+		"formal languages",
+		"computer organization",
+	},
+
+	"data structures":       {"discrete math"},
+	"databases":             {"data structures"},
+	"discrete math":         {"intro to programming"},
+	"formal languages":      {"discrete math"},
+	"networks":              {"operating systems"},
+	"operating systems":     {"data structures", "computer organization"},
+	"programming languages": {"data structures", "computer organization"},
+}
+
 func TestMain(t *testing.T) {
 	prereqs := prereqs1
-	actual := topoSort(prereqs)
+	actual, _ := topoSort(prereqs)
 
 	if len(actual) != 13 {
 		t.Error("Expected:", len(prereqs), "Actual:", len(actual))
@@ -61,17 +81,21 @@ func TestMain(t *testing.T) {
 				}
 				if prereqCourse == course {
 					if foundPostreq == true {
-						t.Error("Prereqs is not satisfied.")
+						t.Errorf("Prereqs is not satisfied. %s -> %s", postreqCourse, prereqCourse)
 					}
 				}
 			}
 		}
 	}
 
-	// 1ステップ循環を検知するかテスト
-	actual = topoSort(prereqs2)
-	if len(actual) != 0 {
-		t.Error("Expected:", 0, "Actual:", len(actual))
+	actual, err := topoSort(prereqs2)
+	if err == nil {
+		t.Error("failed to find cyclic")
+	}
+
+	actual, err = topoSort(prereqs3)
+	if err == nil {
+		t.Error("failed to find cyclic")
 	}
 
 }

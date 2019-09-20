@@ -1,40 +1,43 @@
 package main
 
+import (
+	"errors"
+)
+
 func main() {}
 
-func topoSort(m map[string][]string) []string {
-	var order []string
-	seen := make(map[string]bool)
-	var visitAll func(items map[string][]string)
-	end := false
+func keys(m map[string][]string) []string {
+	var a []string
+	for k := range m {
+		a = append(a, k)
+	}
+	return a
+}
 
-	visitAll = func(items map[string][]string) {
+func topoSort(m map[string][]string) (order []string, err error) {
 
-		for item := range items {
-			if !seen[item] {
-				seen[item] = true
+	seen := make(map[string]int)
+	var visit func(items string)
 
-				mm := make(map[string][]string)
-				for _, itemm := range m[item] {
+	visit = func(item string) {
+		if seen[item] == 1 {
+			err = errors.New("cyclic found")
 
-					// ※1ステップで循環している場合しか検知しない。
-					for _, itemmm := range m[itemm] {
-						if item == itemmm {
-							end = true
-						}
-					}
-
-					mm[itemm] = m[itemm]
-				}
-				visitAll(mm)
-
-				order = append(order, item)
+		} else if seen[item] == 0 {
+			seen[item] = 1
+			for _, nextItem := range m[item] {
+				visit(nextItem)
 			}
+			seen[item] = 2
+			order = append(order, item)
 		}
 	}
-	visitAll(m)
-	if end == true {
-		order = make([]string, 0)
+
+	for item := range m {
+		if seen[item] == 0 {
+			visit(item)
+		}
 	}
-	return order
+
+	return order, err
 }

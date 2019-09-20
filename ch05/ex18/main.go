@@ -20,14 +20,17 @@ func fetch(url string) (filename string, n int64, err error) {
 		local = "index.html"
 	}
 	f, err := os.Create(local)
-	defer f.Close()
 	if err != nil {
 		return "", 0, err
 	}
+
 	n, err = io.Copy(f, resp.Body)
-	if closeErr := f.Close(); err == nil {
-		err = closeErr
-	}
+	defer func() {
+		if closeErr := f.Close(); err == nil {
+			err = closeErr
+		}
+	}()
+
 	return local, n, err
 }
 

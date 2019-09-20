@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -26,7 +27,7 @@ var prereqs1 = map[string][]string{
 func TestMain(t *testing.T) {
 	prereqs := prereqs1
 	actual := topoSort(prereqs)
-
+	fmt.Println(actual)
 	if len(actual) != 13 {
 		t.Error("Expected:", len(prereqs), "Actual:", len(actual))
 	}

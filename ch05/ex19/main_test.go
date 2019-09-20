@@ -3,7 +3,7 @@ package main
 import "testing"
 
 func Test(t *testing.T) {
-	if a() != 10 {
+	if a() != 1 {
 		t.Error("invalid")
 	}
 }

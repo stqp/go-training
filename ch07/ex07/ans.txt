@@ -1,0 +1,54 @@
+
+・flag.goを参照すると、ちゃんと追っていないが、flagのパースでエラーが起きるとUsage関数が呼ばれるっぽい。
+
+・Usage関数の定義は以下。
+var Usage = func() {
+	fmt.Fprintf(CommandLine.Output(), "Usage of %s:\n", os.Args[0])
+	PrintDefaults()
+}
+
+
+・PrintDefaults関数の定義は以下。
+func PrintDefaults() {
+	CommandLine.PrintDefaults()
+}
+
+
+・PrintDefaults関数の定義は以下。
+func (f *FlagSet) PrintDefaults() {
+	f.VisitAll(func(flag *Flag) {
+		s := fmt.Sprintf("  -%s", flag.Name) // Two spaces before -; see next two comments.
+		name, usage := UnquoteUsage(flag)
+		if len(name) > 0 {
+			s += " " + name
+		}
+		// Boolean flags of one ASCII letter are so common we
+		// treat them specially, putting their usage on the same line.
+		if len(s) <= 4 { // space, space, '-', 'x'.
+			s += "\t"
+		} else {
+			// Four spaces before the tab triggers good alignment
+			// for both 4- and 8-space tab stops.
+			s += "\n    \t"
+		}
+		s += strings.ReplaceAll(usage, "\n", "\n    \t")
+
+		if !isZeroValue(flag, flag.DefValue) {
+			if _, ok := flag.Value.(*stringValue); ok {
+				// put quotes on the value
+				s += fmt.Sprintf(" (default %q)", flag.DefValue)
+			} else {
+				s += fmt.Sprintf(" (default %v)", flag.DefValue)
+			}
+		}
+		fmt.Fprint(f.Output(), s, "\n")
+	})
+}
+
+
+以下の箇所でデフォルト値をSprintf関数に渡しているようなので、Celsius型のString関数が呼ばれるため。
+>s += fmt.Sprintf(" (default %q)", flag.DefValue)
+
+
+・Celsius型のString関数の定義は以下。「°C」が付加されている。
+func (c Celsius) String() string { return fmt.Sprintf("%g°C", c) }

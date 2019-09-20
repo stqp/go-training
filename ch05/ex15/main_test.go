@@ -17,7 +17,7 @@ func TestMax(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		actual := max(c.arg...)
+		actual, _ := max(c.arg...)
 		if actual != c.expected {
 			t.Error("expected:", c.expected, "actual:", actual)
 		}
@@ -34,7 +34,7 @@ func TestMin(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		actual := min(c.arg...)
+		actual, _ := min(c.arg...)
 		if actual != c.expected {
 			t.Error("expected:", c.expected, "actual:", actual)
 		}

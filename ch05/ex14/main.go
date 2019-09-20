@@ -17,14 +17,26 @@ func breadthFirst(f func(item string) []string, worklist []string) {
 		}
 	}
 }
-aaa
+
 func topoSort(m map[string][]string) []string {
 	var order []string
+	var visit func(items string) []string
 
-	var visit func(item string) []string
 	visit = func(item string) []string {
 		order = append(order, item)
-		return m[item]
+		delete(m, item)
+		var res []string
+		for _, nextItem := range m[item] {
+			for j := range m {
+				for _, v := range m[j] {
+					if v == nextItem {
+						res = append(res, nextItem)
+					}
+				}
+			}
+		}
+
+		return res
 	}
 
 	var keys []string
@@ -33,6 +45,8 @@ func topoSort(m map[string][]string) []string {
 	}
 
 	sort.Strings(keys)
+
 	breadthFirst(visit, keys)
+
 	return order
 }
