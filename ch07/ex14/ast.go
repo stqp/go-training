@@ -39,4 +39,9 @@ type call struct {
 	args []Expr
 }
 
+type list struct {
+	fn   string // one of "min" , "max"
+	args []Expr
+}
+
 //!-ast

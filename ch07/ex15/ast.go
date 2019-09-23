@@ -1,7 +1,7 @@
 // Copyright © 2016 Alan A. A. Donovan & Brian W. Kernighan.
 // License: https://creativecommons.org/licenses/by-nc-sa/4.0/
 
-package eval
+package main
 
 // An Expr is an arithmetic expression.
 type Expr interface {
@@ -36,6 +36,11 @@ type binary struct {
 // A call represents a function call expression, e.g., sin(x).
 type call struct {
 	fn   string // one of "pow", "sin", "sqrt"
+	args []Expr
+}
+
+type list struct {
+	fn   string // one of "min" , "max"
 	args []Expr
 }
 

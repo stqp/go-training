@@ -99,6 +99,7 @@ func parseUnary(lex *lexer) Expr {
 
 // primary = id
 //         | id '(' expr ',' ... ',' expr ')'
+//         | id '[' expr ',' ... ',' expr ']'
 //         | num
 //         | '(' expr ')'
 func parsePrimary(lex *lexer) Expr {
@@ -106,26 +107,46 @@ func parsePrimary(lex *lexer) Expr {
 	case scanner.Ident:
 		id := lex.text()
 		lex.next() // consume Ident
-		if lex.token != '(' {
+		if lex.token != '(' && lex.token != '[' {
 			return Var(id)
 		}
-		lex.next() // consume '('
-		var args []Expr
-		if lex.token != ')' {
-			for {
-				args = append(args, parseExpr(lex))
-				if lex.token != ',' {
-					break
-				}
-				lex.next() // consume ','
-			}
+		if lex.token == '(' {
+			lex.next() // consume '('
+			var args []Expr
 			if lex.token != ')' {
-				msg := fmt.Sprintf("got %q, want ')'", lex.token)
-				panic(lexPanic(msg))
+				for {
+					args = append(args, parseExpr(lex))
+					if lex.token != ',' {
+						break
+					}
+					lex.next() // consume ','
+				}
+				if lex.token != ')' {
+					msg := fmt.Sprintf("got %q, want ')'", lex.token)
+					panic(lexPanic(msg))
+				}
 			}
+			lex.next() // consume ')'
+			return call{id, args}
+		} else {
+			lex.next() // consume '['
+			var args []Expr
+			if lex.token != ']' {
+				for {
+					args = append(args, parseExpr(lex))
+					if lex.token != ',' {
+						break
+					}
+					lex.next() // consume ','
+				}
+				if lex.token != ']' {
+					msg := fmt.Sprintf("got %q, want ')'", lex.token)
+					panic(lexPanic(msg))
+				}
+			}
+			lex.next() // consume ']'
+			return list{id, args}
 		}
-		lex.next() // consume ')'
-		return call{id, args}
 
 	case scanner.Int, scanner.Float:
 		f, err := strconv.ParseFloat(lex.text(), 64)
