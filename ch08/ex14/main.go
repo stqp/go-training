@@ -3,15 +3,17 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"log"
 	"net"
+	"net/http"
 	"time"
+
+	"golang.org/x/net/websocket"
 )
 
 type client struct {
 	updated time.Time
 	ch      *chan string
-	conn    *net.Conn
+	conn    *websocket.Conn
 	who     string
 }
 
@@ -43,14 +45,15 @@ func broadcaster() {
 	}
 }
 
-func handleConn(conn net.Conn) {
-
-	who := conn.RemoteAddr().String()
+func handleConn(conn *websocket.Conn) {
+	q := conn.Request().URL.Query()
+	who := q.Get("name")
 	ch := make(chan string)
+
 	c := &client{
 		updated: time.Now(),
 		ch:      &ch,
-		conn:    &conn,
+		conn:    conn,
 		who:     who,
 	}
 	go clientWriter(conn, *c.ch)
@@ -92,18 +95,13 @@ func closeIfNoActionFor(sec int) {
 }
 
 func main() {
-	listener, err := net.Listen("tcp", "localhost:8000")
-	if err != nil {
-		log.Fatal(err)
-	}
+
 	go broadcaster()
 	go closeIfNoActionFor(600) // 5 minutes.
-	for {
-		conn, err := listener.Accept()
-		if err != nil {
-			log.Print(err)
-			continue
-		}
-		go handleConn(conn)
+
+	http.Handle("/", websocket.Handler(handleConn))
+	err := http.ListenAndServe(":8000", nil)
+	if err != nil {
+		panic(err)
 	}
 }
