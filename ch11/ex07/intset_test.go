@@ -76,3 +76,15 @@ func BenchmarkMapSetUnionWith(b *testing.B) {
 		set.UnionWith(&set2)
 	}
 }
+
+// $ go test -bench=.
+// goos: darwin
+// goarch: amd64
+// pkg: github.com/stqp/go-training/ch11/ex07
+// BenchmarkIntSetAdd-4         	       5	 204147884 ns/op
+// BenchmarkMapSetAdd-4         	 5000000	       302 ns/op
+// BenchmarkIntSetUnionWith-4   	       2	 546954559 ns/op
+// BenchmarkMapSetUnionWith-4   	   10000	    706250 ns/op
+// PASS
+// ok  	github.com/stqp/go-training/ch11/ex07	15.817s
+// $
