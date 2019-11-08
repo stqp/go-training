@@ -9,7 +9,7 @@ import (
 	"unicode/utf8"
 )
 
-func Charcount(in io.Reader, out io.Writer) {
+func Charcount(in io.Reader, out io.Writer) (map[rune]int, [utf8.UTFMax + 1]int) {
 	counts := make(map[rune]int)
 	var utflen [utf8.UTFMax + 1]int
 	invalid := 0
@@ -30,19 +30,20 @@ func Charcount(in io.Reader, out io.Writer) {
 		counts[r]++
 		utflen[n]++
 	}
-	fmt.Fprintf(out, "rune\tcount\n")
-	for c, n := range counts {
-		fmt.Fprintf(out, "%q\t%d\n", c, n)
-	}
-	fmt.Fprint(out, "\nlen\tcount\n")
-	for i, n := range utflen {
-		if i > 0 {
-			fmt.Fprintf(out, "%d\t%d\n", i, n)
-		}
-	}
-	if invalid > 0 {
-		fmt.Fprintf(out, "\n%d invalid UTF-8 characters\n", invalid)
-	}
+	// fmt.Fprintf(out, "rune\tcount\n")
+	// for c, n := range counts {
+	// 	fmt.Fprintf(out, "%q\t%d\n", c, n)
+	// }
+	// fmt.Fprint(out, "\nlen\tcount\n")
+	// for i, n := range utflen {
+	// 	if i > 0 {
+	// 		fmt.Fprintf(out, "%d\t%d\n", i, n)
+	// 	}
+	// }
+	// if invalid > 0 {
+	// 	fmt.Fprintf(out, "\n%d invalid UTF-8 characters\n", invalid)
+	// }
+	return counts, utflen
 }
 
 func main() {
