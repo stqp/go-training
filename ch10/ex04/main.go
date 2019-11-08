@@ -56,7 +56,6 @@ func main() {
 				res = append(res, decoded.ImportPath)
 			}
 		}
-		//fmt.Println(out)
 	}
 
 	fmt.Println(res)
